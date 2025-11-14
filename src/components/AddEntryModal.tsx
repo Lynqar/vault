@@ -4,6 +4,8 @@ import { X, RefreshCw, Eye, EyeOff, Copy } from 'lucide-react'
 import { useVault } from '../contexts/VaultContext'
 import type { VaultEntry } from '../vault'
 import { Button } from '../ui'
+import { generatePassword, DEFAULT_CONFIG, type PasswordConfig } from '../lib/passwordGenerator'
+import { Validators, MemorySecurity } from '../lib/security'
 
 interface AddEntryModalProps {
   entry?: VaultEntry | null
@@ -17,9 +19,12 @@ const AddEntryModal: React.FC<AddEntryModalProps> = ({ entry, onClose }) => {
     username: '',
     password: '',
     url: '',
-    notes: ''
+    notes: '',
+    totpSecret: '',
+    backupCodes: [] as string[]
   })
   const [showPassword, setShowPassword] = useState(false)
+  const [passwordConfig] = useState<PasswordConfig>(DEFAULT_CONFIG)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -32,24 +37,24 @@ const AddEntryModal: React.FC<AddEntryModalProps> = ({ entry, onClose }) => {
         username: entry.username || '',
         password: entry.password || '',
         url: entry.url || '',
-        notes: entry.notes || ''
+        notes: entry.notes || '',
+        totpSecret: entry.totpSecret || '',
+        backupCodes: entry.backupCodes || []
       })
     }
   }, [entry])
 
-  const generatePassword = () => {
-    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+[]{}'
-    const length = 16
-    const arr = new Uint8Array(length)
-    crypto.getRandomValues(arr)
-    const password = Array.from(arr).map(n => charset[n % charset.length]).join('')
+  // Password functions
+  const generateRandomPassword = () => {
+    const password = generatePassword(passwordConfig)
     setFormData(prev => ({ ...prev, password }))
   }
 
   const copyPassword = async () => {
     try {
       await navigator.clipboard.writeText(formData.password)
-      // Could add a toast notification here
+      // Clear clipboard after 30 seconds for security
+      MemorySecurity.clearClipboardAfter(30000)
     } catch (err) {
       console.error('Failed to copy password:', err)
     }
@@ -59,8 +64,22 @@ const AddEntryModal: React.FC<AddEntryModalProps> = ({ entry, onClose }) => {
     e.preventDefault()
     setError('')
 
-    if (!formData.title.trim()) {
-      setError('Title is required')
+    // Sanitize inputs
+    const sanitizedData = {
+      ...formData,
+      title: Validators.sanitizeString(formData.title),
+      username: Validators.sanitizeString(formData.username),
+      password: formData.password, // Don't sanitize passwords
+      url: Validators.sanitizeString(formData.url),
+      notes: Validators.sanitizeString(formData.notes),
+      totpSecret: Validators.sanitizeString(formData.totpSecret),
+      backupCodes: formData.backupCodes
+    }
+
+    // Validate the sanitized data
+    const validation = Validators.validateVaultEntry(sanitizedData)
+    if (!validation.isValid) {
+      setError(validation.errors.join('. '))
       return
     }
 
@@ -68,9 +87,9 @@ const AddEntryModal: React.FC<AddEntryModalProps> = ({ entry, onClose }) => {
 
     try {
       if (isEditing && entry) {
-        await updateEntry(entry.id, formData)
+        await updateEntry(entry.id, sanitizedData)
       } else {
-        await addEntry(formData)
+        await addEntry(sanitizedData)
       }
       onClose()
     } catch (err) {
@@ -167,7 +186,7 @@ const AddEntryModal: React.FC<AddEntryModalProps> = ({ entry, onClose }) => {
                 </div>
                 <button
                   type="button"
-                  onClick={generatePassword}
+                  onClick={generateRandomPassword}
                   className="px-3 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded transition-colors"
                   title="Generate secure password"
                 >

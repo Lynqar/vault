@@ -9,20 +9,31 @@ const VaultUnlock: React.FC = () => {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [rateLimitMessage, setRateLimitMessage] = useState<string>('')
 
   const handleUnlock = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setRateLimitMessage('')
     setLoading(true)
 
     try {
-      const success = await unlock(password)
-      if (!success) {
+      const result = await unlock(password)
+
+      if (result.success) {
+        // Success - vault unlocked
+      } else if (result.rateLimit) {
+        // Rate limited
+        const waitSeconds = Math.ceil(result.rateLimit.waitTime / 1000)
+        const waitMins = Math.ceil(waitSeconds / 60)
+        setRateLimitMessage(`Too many attempts. Please wait ${waitMins} minute${waitMins > 1 ? 's' : ''} before trying again.`)
+      } else {
+        // Invalid password
         setError('Invalid password. Please try again.')
       }
     } catch (err) {
-      console.error(err)
-      setError('Failed to unlock vault.')
+      console.error('Unlock error:', err)
+      setError('Unable to unlock vault. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -33,7 +44,7 @@ const VaultUnlock: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-slate-800 border border-slate-700 rounded-xl shadow-xl p-8"
+        className="w-full max-w-md bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl shadow-xl p-8"
       >
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -63,6 +74,15 @@ const VaultUnlock: React.FC = () => {
               <div className="flex items-center">
                 <Lock className="w-5 h-5 text-red-400 mr-2" />
                 <p className="text-red-400 text-sm">{error}</p>
+              </div>
+            </div>
+          )}
+
+          {rateLimitMessage && (
+            <div className="bg-amber-900/20 border border-amber-600/30 rounded-lg p-4">
+              <div className="flex items-center">
+                <Shield className="w-5 h-5 text-amber-400 mr-2" />
+                <p className="text-amber-400 text-sm">{rateLimitMessage}</p>
               </div>
             </div>
           )}

@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Eye, EyeOff, Copy, Edit, Trash2, Globe, User } from 'lucide-react'
+import { Eye, EyeOff, Copy, Edit, Trash2, Globe, User, Shield } from 'lucide-react'
 import type { VaultEntry } from '../vault'
 import { useVault } from '../contexts/VaultContext'
+import { MemorySecurity } from '../lib/security'
+import { getDomain, useFavicon } from '../lib/favicon'
+import TOTPCodeDisplay from './TOTPCodeDisplay'
 
 interface VaultEntryItemProps {
   entry: VaultEntry
@@ -15,12 +18,21 @@ const VaultEntryItem: React.FC<VaultEntryItemProps> = ({ entry, onEdit, index })
   const [showPassword, setShowPassword] = useState(false)
   const [copiedField, setCopiedField] = useState<string | undefined>(undefined)
 
+  // Get favicon for the domain
+  const domain = entry.url ? getDomain(entry.url) : ''
+  const { favicon, loading } = useFavicon(domain)
+
   const copyToClipboard = async (text: string | undefined, field: string) => {
     if (!text) return
     try {
       await navigator.clipboard.writeText(text)
       setCopiedField(field)
       setTimeout(() => setCopiedField(undefined), 2000)
+
+      // Clear clipboard after 30 seconds for security (but only for sensitive data)
+      if (field === 'password' || field === 'totp') {
+        MemorySecurity.clearClipboardAfter(30000)
+      }
     } catch (err) {
       console.error('Failed to copy:', err)
     }
@@ -32,14 +44,7 @@ const VaultEntryItem: React.FC<VaultEntryItemProps> = ({ entry, onEdit, index })
     }
   }
 
-  const getFaviconUrl = (url: string): string => {
-    try {
-      const domain = new URL(url).hostname
-      return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`
-    } catch {
-      return ''
-    }
-  }
+
 
   return (
     <motion.div
@@ -53,14 +58,22 @@ const VaultEntryItem: React.FC<VaultEntryItemProps> = ({ entry, onEdit, index })
           {/* Title and URL */}
           <div className="flex items-center space-x-3 mb-3">
             {entry.url ? (
-              <img
-                src={getFaviconUrl(entry.url)}
-                alt=""
-                className="w-6 h-6 rounded"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none'
-                }}
-              />
+              loading ? (
+                <div className="w-6 h-6 bg-slate-600 rounded animate-pulse" />
+              ) : favicon && favicon.loaded ? (
+                <img
+                  src={favicon.url}
+                  alt=""
+                  className="w-6 h-6 rounded"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none'
+                  }}
+                />
+              ) : (
+                <div className="w-6 h-6 bg-slate-600 rounded flex items-center justify-center">
+                  <Globe className="w-4 h-4 text-slate-400" />
+                </div>
+              )
             ) : (
               <div className="w-6 h-6 bg-slate-600 rounded flex items-center justify-center">
                 <Globe className="w-4 h-4 text-slate-400" />
@@ -120,6 +133,20 @@ const VaultEntryItem: React.FC<VaultEntryItemProps> = ({ entry, onEdit, index })
                 <Copy className="w-4 h-4" />
               </button>
               {copiedField === 'password' && (
+                <span className="text-xs text-green-400">Copied!</span>
+              )}
+            </div>
+          )}
+
+          {/* TOTP Code */}
+          {entry.totpSecret && (
+            <div className="flex items-center space-x-2 mb-2">
+              <Shield className="w-4 h-4 text-indigo-400" />
+              <TOTPCodeDisplay
+                secret={entry.totpSecret}
+                onCopy={() => copyToClipboard('TOTP code', 'totp')}
+              />
+              {copiedField === 'totp' && (
                 <span className="text-xs text-green-400">Copied!</span>
               )}
             </div>

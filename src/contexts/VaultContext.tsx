@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { db } from '../lib/db'
 import { deriveKey, decryptJSON, encryptJSON } from '../lib/crypto'
+import { rateLimiter, MemorySecurity } from '../lib/security'
 import type { VaultEntry } from '../vault'
 
 type VaultContextType = {
   unlocked: boolean
-  unlock: (password: string) => Promise<boolean>
+  unlock: (password: string) => Promise<{ success: boolean; rateLimit?: { waitTime: number } }>
   lock: () => void
   entries: VaultEntry[]
   addEntry: (entry: Omit<VaultEntry, 'id' | 'createdAt'>) => Promise<void>
@@ -39,8 +40,18 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   async function unlock(password: string) {
     try {
+      // Check rate limiting first
+      const limitCheck = rateLimiter.checkLimit()
+      if (!limitCheck.allowed) {
+        return {
+          success: false,
+          rateLimit: { waitTime: limitCheck.waitTime! }
+        }
+      }
+
       const saltRow = await db.meta.get('salt')
       if (!saltRow) {
+        rateLimiter.recordFailedAttempt()
         throw new Error('No vault found. Please create one first.')
       }
 
@@ -57,13 +68,24 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         decoded.push(dec as VaultEntry)
       }
 
+      // Clear password from memory
+      MemorySecurity.wipeString(password)
+
       setKey(derived)
       setEntries(decoded)
       setUnlocked(true)
-      return true
+
+      // Record successful login
+      rateLimiter.recordSuccessfulAttempt()
+
+      return { success: true }
     } catch (e) {
       console.error('Unlock failed:', e)
-      return false
+
+      // Record failed attempt (but don't expose sensitive info in error)
+      rateLimiter.recordFailedAttempt()
+
+      return { success: false }
     }
   }
 
