@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { db } from '../lib/db'
-import { deriveKey, decryptJSON, saltToB64, genSalt, encryptJSON } from '../lib/crypto'
+import { deriveKey, decryptJSON, encryptJSON } from '../lib/crypto'
 import type { VaultEntry } from '../vault'
 
 type VaultContextType = {

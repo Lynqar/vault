@@ -1,5 +1,4 @@
 import Dexie from 'dexie'
-import type { VaultEntry } from '../vault'
 
 export class LynqarDB extends Dexie {
   entries: Dexie.Table<{ id: string; encrypted: string }, string>

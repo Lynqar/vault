@@ -15,7 +15,8 @@ const VaultEntryItem: React.FC<VaultEntryItemProps> = ({ entry, onEdit, index })
   const [showPassword, setShowPassword] = useState(false)
   const [copiedField, setCopiedField] = useState<string | null>(null)
 
-  const copyToClipboard = async (text: string, field: string) => {
+  const copyToClipboard = async (text: string | undefined, field: string) => {
+    if (!text) return
     try {
       await navigator.clipboard.writeText(text)
       setCopiedField(field)
