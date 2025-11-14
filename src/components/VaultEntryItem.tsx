@@ -13,14 +13,14 @@ interface VaultEntryItemProps {
 const VaultEntryItem: React.FC<VaultEntryItemProps> = ({ entry, onEdit, index }) => {
   const { deleteEntry } = useVault()
   const [showPassword, setShowPassword] = useState(false)
-  const [copiedField, setCopiedField] = useState<string | null>(null)
+  const [copiedField, setCopiedField] = useState<string | undefined>(undefined)
 
   const copyToClipboard = async (text: string | undefined, field: string) => {
     if (!text) return
     try {
       await navigator.clipboard.writeText(text)
       setCopiedField(field)
-      setTimeout(() => setCopiedField(null), 2000)
+      setTimeout(() => setCopiedField(undefined), 2000)
     } catch (err) {
       console.error('Failed to copy:', err)
     }
