@@ -9,7 +9,6 @@ import { Validators, MemorySecurity } from '../lib/security'
 import { smartSuggestions } from '../lib/smartSuggestions'
 import {
   parseTOTPUrl,
-  createTOTPUrl,
   generateTOTPSecret,
   generateTOTPToken,
   generateBackupCodes,
@@ -40,11 +39,6 @@ const AddEntryModal: React.FC<AddEntryModalProps> = ({ entry, onClose }) => {
   const [error, setError] = useState('')
   const [enableTOTP, setEnableTOTP] = useState(false)
   const [totpUrl, setTotpUrl] = useState('')
-  const [parsedTotpData, setParsedTotpData] = useState<{
-    secret: string
-    label?: string
-    issuer?: string
-  } | null>(null)
 
   // Smart suggestions state
   const [showUsernameSuggestions, setShowUsernameSuggestions] = useState(false)
@@ -198,7 +192,6 @@ const AddEntryModal: React.FC<AddEntryModalProps> = ({ entry, onClose }) => {
           : prev.username
       }))
       setEnableTOTP(true) // Enable TOTP section
-      setParsedTotpData(parsed)
     } else {
       // If not a valid TOTP URL, don't fill anything
       console.warn('Invalid TOTP URL scanned:', qrData)
@@ -434,14 +427,11 @@ const AddEntryModal: React.FC<AddEntryModalProps> = ({ entry, onClose }) => {
                           setTotpUrl(e.target.value)
                           const parsed = parseTOTPUrl(e.target.value)
                           if (parsed) {
-                            setParsedTotpData(parsed)
                             setFormData(prev => ({
                               ...prev,
                               totpSecret: parsed.secret,
                               title: parsed.label || prev.title
                             }))
-                          } else {
-                            setParsedTotpData(null)
                           }
                         }}
                         className="form-input flex-1"
@@ -455,7 +445,6 @@ const AddEntryModal: React.FC<AddEntryModalProps> = ({ entry, onClose }) => {
                             setTotpUrl(text)
                             const parsed = parseTOTPUrl(text)
                             if (parsed) {
-                              setParsedTotpData(parsed)
                               setFormData(prev => ({
                                 ...prev,
                                 totpSecret: parsed.secret,
