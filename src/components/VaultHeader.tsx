@@ -66,7 +66,7 @@ const VaultHeader: React.FC<VaultHeaderProps> = ({ onLock, onSettings }) => {
     <>
       <header className="fixed top-0 left-0 w-full bg-black/90 backdrop-blur-lg border-b border-border z-50 py-4">
         <div className="container mx-auto px-6 flex justify-between items-center">
-          <a href="/" className="text-xl font-semibold text-text">
+          <a href="https://lynqar.github.io/home/" className="text-xl font-semibold text-text">
             Lynqar
           </a>
           <nav className="hidden md:flex items-center gap-6">
