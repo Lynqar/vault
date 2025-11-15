@@ -43,34 +43,40 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     // Update document class for Tailwind CSS
     document.documentElement.classList.toggle('dark', resolvedTheme === 'dark')
 
-    // Update CSS custom properties
+    // Update CSS custom properties - use our unified color system
     const root = document.documentElement
     if (resolvedTheme === 'dark') {
-      // Dark theme CSS variables
-      root.style.setProperty('--bg-primary', 'rgb(15, 23, 42)') // slate-900
-      root.style.setProperty('--bg-secondary', 'rgb(30, 41, 59)') // slate-800
-      root.style.setProperty('--bg-tertiary', 'rgb(51, 65, 85)') // slate-700
-      root.style.setProperty('--bg-accent', 'rgb(100, 116, 139)') // slate-500
-      root.style.setProperty('--text-primary', 'rgb(248, 250, 252)') // slate-50
-      root.style.setProperty('--text-secondary', 'rgb(203, 213, 225)') // slate-300
-      root.style.setProperty('--text-muted', 'rgb(148, 163, 184)') // slate-400
-      root.style.setProperty('--border-primary', 'rgb(51, 65, 85)') // slate-700
-      root.style.setProperty('--border-secondary', 'rgb(71, 85, 105)') // slate-600
-      root.style.setProperty('--accent-primary', 'rgb(96, 165, 250)') // indigo-400
-      root.style.setProperty('--accent-secondary', 'rgb(59, 130, 246)') // indigo-500
+      // Dark theme - keep our beautiful design colors
+      root.style.setProperty('--bg', '#000000')
+      root.style.setProperty('--surface', '#0f0f0f')
+      root.style.setProperty('--text', '#ffffff')
+      root.style.setProperty('--muted', '#d1d5db')
+      root.style.setProperty('--accent', '#a78bfa')
+      root.style.setProperty('--accent-start', '#ffffff')
+      root.style.setProperty('--accent-end', '#c4b5fd')
+      root.style.setProperty('--border', '#333333')
+      root.style.setProperty('--card', '#0f0f0f')
+      root.style.setProperty('--grad-start', '#ffffff')
+      root.style.setProperty('--grad-end', '#c4b5fd')
+      root.style.setProperty('--text-muted', '#d1d5db')
+      root.style.setProperty('--success', '#10b981')
+      root.style.setProperty('--error', '#ef4444')
     } else {
-      // Light theme CSS variables
-      root.style.setProperty('--bg-primary', 'rgb(255, 255, 255)') // white
-      root.style.setProperty('--bg-secondary', 'rgb(248, 250, 252)') // gray-50
-      root.style.setProperty('--bg-tertiary', 'rgb(241, 245, 249)') // gray-100
-      root.style.setProperty('--bg-accent', 'rgb(148, 163, 184)') // gray-500
-      root.style.setProperty('--text-primary', 'rgb(15, 23, 42)') // gray-900
-      root.style.setProperty('--text-secondary', 'rgb(55, 65, 81)') // gray-700
-      root.style.setProperty('--text-muted', 'rgb(107, 114, 128)') // gray-500
-      root.style.setProperty('--border-primary', 'rgb(229, 231, 235)') // gray-200
-      root.style.setProperty('--border-secondary', 'rgb(209, 213, 219)') // gray-300
-      root.style.setProperty('--accent-primary', 'rgb(59, 130, 246)') // blue-500
-      root.style.setProperty('--accent-secondary', 'rgb(37, 99, 235)') // blue-600
+      // Light theme - contrasting colors for light background
+      root.style.setProperty('--bg', '#f8fafc')           // very light gray-blue
+      root.style.setProperty('--surface', '#ffffff')     // pure white
+      root.style.setProperty('--text', '#0b1220')        // dark blue-gray
+      root.style.setProperty('--muted', '#64748b')       // medium gray-blue
+      root.style.setProperty('--accent', '#a78bfa')      // keep purple accent
+      root.style.setProperty('--accent-start', '#e879f9')  // rose purple
+      root.style.setProperty('--accent-end', '#8b5cf6')    // purple
+      root.style.setProperty('--border', '#e2e8f0')      // light gray border
+      root.style.setProperty('--card', '#ffffff')        // white cards
+      root.style.setProperty('--grad-start', '#0b1220')    // dark text for gradients
+      root.style.setProperty('--grad-end', '#64748b')      // muted gray
+      root.style.setProperty('--text-muted', '#64748b')   // muted text
+      root.style.setProperty('--success', '#059669')     // green-700 for light
+      root.style.setProperty('--error', '#dc2626')       // red-600 for light
     }
   }
 

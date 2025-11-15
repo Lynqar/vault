@@ -6,6 +6,7 @@ export type VaultEntry = {
   password?: string;
   url?: string;
   notes?: string;
+  tags?: string[]; // Auto-generated tags based on domain
   totpSecret?: string; // Base32 encoded TOTP secret
   backupCodes?: string[]; // TOTP backup codes
   createdAt: string;

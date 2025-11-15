@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Copy } from 'lucide-react'
 import { generateTOTPToken, formatTOTPTime, getTOTPProgress, type TOTPResult } from '../lib/totp'
+import { copyTOTPCode, getClipboardAutoClearEnabled } from '../lib/clipboard'
 
 interface TOTPCodeDisplayProps {
   secret: string
@@ -32,7 +33,7 @@ const TOTPCodeDisplay: React.FC<TOTPCodeDisplayProps> = ({ secret, onCopy }) => 
   const handleCopy = async () => {
     if (totpResult?.token) {
       try {
-        await navigator.clipboard.writeText(totpResult.token)
+        await copyTOTPCode(totpResult.token)
         onCopy?.(totpResult.token)
       } catch (err) {
         console.error('Failed to copy TOTP code:', err)
@@ -57,40 +58,53 @@ const TOTPCodeDisplay: React.FC<TOTPCodeDisplayProps> = ({ secret, onCopy }) => 
   }
 
   return (
-    <div className="flex items-center space-x-2 bg-slate-700 rounded px-3 py-2">
+    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/20">
       {/* TOTP Code */}
-      <span className="font-mono text-lg font-bold text-white tracking-wider">
+      <span className="font-mono font-bold text-text tracking-wider">
         {totpResult.token}
       </span>
 
-      {/* Countdown Progress */}
-      <div className="relative">
-        <div className="w-6 h-6 rounded-full border-2 border-slate-600">
-          <div
-            className="absolute inset-0 rounded-full transition-colors duration-1000"
-            style={{
-              background: `conic-gradient(from 0deg, ${
-                totpResult.remaining <= 5 ? '#ef4444' : '#10b981'
-              } 0deg, ${
-                totpResult.remaining <= 5 ? '#ef4444' : '#10b981'
-              } ${(getTOTPProgress(totpResult.remaining) * 3.6)}deg, transparent ${(getTOTPProgress(totpResult.remaining) * 3.6)}deg)`
-            }}
+      {/* Countdown Progress Ring */}
+      <div className="relative w-4 h-4">
+        <svg width="16" height="16" className="transform -rotate-90">
+          <circle
+            cx="8"
+            cy="8"
+            r="6"
+            stroke="currentColor"
+            strokeWidth="2"
+            fill="none"
+            className="text-glass opacity-50"
           />
+          <circle
+            cx="8"
+            cy="8"
+            r="6"
+            stroke={totpResult.remaining <= 5 ? 'var(--error, #ef4444)' : 'var(--success, #10b981)'}
+            strokeWidth="2"
+            fill="none"
+            strokeDasharray={`${(getTOTPProgress(totpResult.remaining) / 100) * 37.68} 37.68`}
+            strokeLinecap="round"
+            className="transition-all duration-1000"
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className={`text-xs font-bold ${
+            totpResult.remaining <= 5 ? 'text-red-400' : 'text-green-400'
+          }`}>
+            {formatTOTPTime(totpResult.remaining)}
+          </span>
         </div>
-        <span className={`absolute inset-0 flex items-center justify-center text-xs font-bold ${
-          totpResult.remaining <= 5 ? 'text-red-400' : 'text-green-400'
-        }`}>
-          {formatTOTPTime(totpResult.remaining)}
-        </span>
       </div>
 
       {/* Copy Button */}
       <button
         onClick={handleCopy}
-        className="p-1 text-slate-400 hover:text-white transition-colors"
+        className="p-1 text-muted hover:text-text transition-colors"
         title="Copy TOTP code"
+        aria-label="Copy TOTP code"
       >
-        <Copy className="w-4 h-4" />
+        <Copy className="w-3 h-3" />
       </button>
     </div>
   )

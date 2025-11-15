@@ -49,15 +49,15 @@ const VaultOnboarding = () => {
   }
 
   return (
-    <div className="min-h-screen p-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen p-4 bg-bg">
       <div className="flex items-center justify-center min-h-screen">
-        <div className="w-full max-w-md bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
+        <div className="w-full max-w-md bg-surface border border-border rounded-lg p-6">
         <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="material-symbols-outlined text-3xl text-indigo-400">lock</span>
+          <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="material-symbols-outlined text-3xl text-accent">lock</span>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Create Your Vault</h2>
-          <p className="text-slate-400 text-sm">
+          <h2 className="text-lg font-bold text-text mb-2">Create Your Vault</h2>
+          <p className="text-muted text-sm">
             Set a strong master password for your encrypted password vault.
             <br />
             <strong>Remember this password - it cannot be recovered!</strong>
@@ -66,14 +66,14 @@ const VaultOnboarding = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">
+            <label className="block text-sm font-medium text-muted mb-1">
               Master Password
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="form-input"
               placeholder="Enter a strong password"
               required
               minLength={8}
@@ -81,14 +81,14 @@ const VaultOnboarding = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">
+            <label className="block text-sm font-medium text-muted mb-1">
               Confirm Password
             </label>
             <input
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="form-input"
               placeholder="Confirm your password"
               required
               minLength={8}
@@ -96,8 +96,8 @@ const VaultOnboarding = () => {
           </div>
 
           {error && (
-            <div className="bg-red-900/20 border border-red-600/30 rounded p-3">
-              <p className="text-red-400 text-sm">{error}</p>
+            <div className="bg-error/10 border border-error/20 rounded p-3">
+              <p className="text-error text-sm">{error}</p>
             </div>
           )}
 
@@ -110,9 +110,9 @@ const VaultOnboarding = () => {
           </Button>
         </form>
 
-        <div className="mt-6 p-4 bg-blue-900/20 border border-blue-600/30 rounded">
-          <h3 className="text-sm font-semibold text-blue-400 mb-2">Security Notes</h3>
-          <ul className="text-xs text-slate-300 space-y-1">
+        <div className="mt-6 p-4 bg-accent/10 border border-accent/20 rounded">
+          <h3 className="text-sm font-semibold text-accent mb-2">Security Notes</h3>
+          <ul className="text-xs text-muted space-y-1">
             <li>• Your data is encrypted with AES-256-GCM</li>
             <li>• Master password is never stored or sent to servers</li>
             <li>• All encryption happens in your browser</li>

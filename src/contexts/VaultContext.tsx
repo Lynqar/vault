@@ -4,6 +4,46 @@ import { deriveKey, decryptJSON, encryptJSON } from '../lib/crypto'
 import { rateLimiter, MemorySecurity } from '../lib/security'
 import type { VaultEntry } from '../vault'
 
+// Auto-tagging categories for smart categorization
+const tagCategories = {
+  banking: ['bank', 'banks', 'icici', 'hdfc', 'sbi', 'axis', 'pnb', 'paytm', 'phonepe', 'gpay', 'razorpay', 'stripe'],
+  shopping: ['amazon', 'flipkart', 'myntra', 'ajio', 'nykaa', 'bigbasket', 'swiggy', 'zomato', 'blinkit', 'aliexpress', 'ebay'],
+  social: ['facebook', 'instagram', 'twitter', 'linkedin', 'tiktok', 'snapchat', 'whatsapp', 'telegram', 'discord', 'slack'],
+  entertainment: ['netflix', 'prime', 'hotstar', 'disney', 'youtube', 'vimeo', 'spotify', 'soundcloud', 'gaana'],
+  work: ['gmail', 'outlook', 'office365', 'zoom', 'teams', 'slack', 'gitlab', 'github', 'bitbucket'],
+  developer: ['github', 'gitlab', 'bitbucket', 'stackoverflow', 'docker', 'npm', 'yarn', 'vercel', 'figma', 'code']
+};
+
+// Smart domain analysis for auto-tagging
+const analyzeDomainForTags = (url: string, title: string): string[] => {
+  const tags: string[] = [];
+
+  if (!url) return tags;
+
+  try {
+    const domain = new URL(url.startsWith('http') ? url : `https://${url}`).hostname.toLowerCase();
+    const domainParts = domain.split('.');
+
+    // Check each category
+    for (const [category, keywords] of Object.entries(tagCategories)) {
+      for (const keyword of keywords) {
+        if (domainParts.some(part => part.includes(keyword))) {
+          // Capitalize category name for display
+          const displayName = category.charAt(0).toUpperCase() + category.slice(1);
+          tags.push(displayName);
+          break; // Only add one tag per category
+        }
+      }
+    }
+
+    // Remove duplicates and limit to 3 tags
+    return [...new Set(tags)].slice(0, 3);
+  } catch (error) {
+    console.warn('Failed to analyze domain for tags:', error);
+    return tags;
+  }
+};
+
 type VaultContextType = {
   unlocked: boolean
   unlock: (password: string) => Promise<{ success: boolean; rateLimit?: { waitTime: number } }>
@@ -95,12 +135,16 @@ export const VaultProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setUnlocked(false)
   }
 
-  async function addEntry(payload: Omit<VaultEntry, 'id' | 'createdAt'>) {
+  async function addEntry(payload: Omit<VaultEntry, 'id' | 'createdAt' | 'tags'>) {
     if (!key) throw new Error('Vault is locked')
+
+    // Auto-generate tags based on URL and title
+    const autoTags = analyzeDomainForTags(payload.url || '', payload.title)
 
     const entry: VaultEntry = {
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
+      tags: autoTags,
       ...payload
     }
 

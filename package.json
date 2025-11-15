@@ -1,5 +1,5 @@
 {
-  "name": "vault-app",
+  "name": "lynqar-vault",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "jsqr": "^1.4.0",
     "dexie": "^4.2.1",
     "framer-motion": "^8.5.5",
     "lucide-react": "^0.270.0",

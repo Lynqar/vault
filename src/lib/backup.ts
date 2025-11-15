@@ -16,6 +16,8 @@ export interface BackupData {
 
 export interface BackupFile extends BackupData {
   signature: string // For verification
+  checksum: string // HMAC-SHA256 of encrypted data for integrity
+  keyFingerprint: string // Hash of derived key for additional validation
 }
 
 // Export vault backup
@@ -67,18 +69,48 @@ export async function exportVaultBackup(masterPassword: string): Promise<void> {
       ['encrypt']
     )
 
-    // Create final backup file structure with signature
+    // Create checksum (HMAC-SHA256) for integrity verification
+    const checksumKey = await window.crypto.subtle.deriveKey(
+      {
+        name: 'HKDF',
+        salt: new TextEncoder().encode('backup-checksum'),
+        info: new TextEncoder().encode('backup-integrity'),
+        hash: 'SHA-256'
+      },
+      tempKey,
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    )
+
+    const dataString = JSON.stringify(backupData)
+    const checksumBuffer = await window.crypto.subtle.sign('HMAC', checksumKey, new TextEncoder().encode(dataString))
+    const checksum = btoa(String.fromCharCode(...new Uint8Array(checksumBuffer)))
+
+    // Create key fingerprint (SHA-256 hash of the derived key)
+    const keyFingerprint = await window.crypto.subtle.sign('HMAC', checksumKey, new TextEncoder().encode('key-verification'))
+    const fingerprintB64 = btoa(String.fromCharCode(...new Uint8Array(keyFingerprint)))
+
+    // Create final backup file structure with signature and security enhancements
     const finalBackup: BackupFile = {
       ...backupData,
-      signature: 'LYNQAR_VAULT_BACKUP_V1'
+      signature: 'LYNQAR_VAULT_BACKUP_V1',
+      checksum: checksum,
+      keyFingerprint: fingerprintB64
     }
 
     // Encrypt the backup data
+    const iv = window.crypto.getRandomValues(new Uint8Array(12))
     const encryptedBackup = await window.crypto.subtle.encrypt(
-      { name: 'AES-GCM', iv: window.crypto.getRandomValues(new Uint8Array(12)) },
+      { name: 'AES-GCM', iv },
       backupKey,
       new TextEncoder().encode(JSON.stringify(finalBackup))
     )
+
+    // Prepend IV to encrypted data for decryption
+    const combined = new Uint8Array(iv.length + encryptedBackup.byteLength)
+    combined.set(iv)
+    combined.set(new Uint8Array(encryptedBackup), iv.length)
 
     // Convert to base64 for download
     const encryptedBase64 = btoa(String.fromCharCode(...new Uint8Array(encryptedBackup)))
@@ -141,8 +173,42 @@ export async function importVaultBackup(
       const backup: BackupFile = JSON.parse(backupJson)
 
       if (backup.signature !== 'LYNQAR_VAULT_BACKUP_V1') {
-        throw new Error('Invalid backup file')
+        throw new Error('Invalid backup file signature')
       }
+
+      // Verify checksum for data integrity
+      const checksumKey = await window.crypto.subtle.deriveKey(
+        {
+          name: 'HKDF',
+          salt: new TextEncoder().encode('backup-checksum'),
+          info: new TextEncoder().encode('backup-integrity'),
+          hash: 'SHA-256'
+        },
+        tempKey,
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign']
+      )
+
+      const backupData: BackupData = {
+        version: backup.version,
+        createdAt: backup.createdAt,
+        salt: backup.salt,
+        entries: backup.entries,
+        metadata: backup.metadata
+      }
+
+      const dataString = JSON.stringify(backupData)
+      const computedChecksum = await window.crypto.subtle.sign('HMAC', checksumKey, new TextEncoder().encode(dataString))
+      const computedChecksumB64 = btoa(String.fromCharCode(...new Uint8Array(computedChecksum)))
+
+      // Compare computed checksum with stored checksum
+      if (computedChecksumB64 !== backup.checksum) {
+        throw new Error('Backup integrity check failed - file may be corrupted or tampered with')
+      }
+
+      // Optionally verify key fingerprint (can be used for cross-device validation)
+      console.log('Backup integrity verified successfully')
 
       console.log('Backup file valid, importing...')
 

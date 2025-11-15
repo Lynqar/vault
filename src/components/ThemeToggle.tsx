@@ -34,7 +34,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'minimal' }) => {
     return (
       <button
         onClick={toggleTheme}
-        className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50 transition-all duration-200 group"
+        className="p-2 rounded-lg text-muted hover:text-text hover:bg-surface/50 transition-all duration-200 group"
         title={`Current: ${themeLabels[theme]} (${actualTheme}). Click to toggle.`}
       >
         <CurrentIcon className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
@@ -46,7 +46,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'minimal' }) => {
     return (
       <button
         onClick={toggleTheme}
-        className="w-10 h-10 p-0 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-colors flex items-center justify-center"
+        className="w-10 h-10 p-0 rounded-lg bg-accent hover:bg-accent/80 text-text transition-colors flex items-center justify-center"
         title={`Current: ${themeLabels[theme]}. Click to toggle.`}
       >
         {actualTheme === 'dark' ? (
@@ -87,7 +87,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'minimal' }) => {
             />
 
             {/* Dropdown */}
-            <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-xl border border-slate-700 z-20">
+            <div className="absolute right-0 mt-2 w-48 bg-surface rounded-lg shadow-xl border border-border z-20">
               <div className="p-1">
                 {(['light', 'dark', 'system'] as ThemeMode[]).map((option) => {
                   const Icon = themeIcons[option]
@@ -100,14 +100,14 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'minimal' }) => {
                       }}
                       className={`w-full flex items-center space-x-3 px-3 py-2 text-left rounded-md transition-colors ${
                         theme === option
-                          ? 'bg-indigo-500/20 text-indigo-300'
-                          : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
+                          ? 'bg-accent/20 text-accent'
+                          : 'text-muted hover:bg-surface/50 hover:text-text'
                       }`}
                     >
                       <Icon className="w-4 h-4" />
                       <span className="capitalize">{themeLabels[option]}</span>
                       {option === 'system' && (
-                        <span className="text-xs text-slate-400 ml-auto">
+                        <span className="text-xs text-muted ml-auto">
                           ({actualTheme})
                         </span>
                       )}
@@ -117,7 +117,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'minimal' }) => {
               </div>
 
               {/* Footer info */}
-              <div className="px-3 py-2 border-t border-slate-700 text-xs text-slate-400">
+              <div className="px-3 py-2 border-t border-border text-xs text-muted">
                 Current: {actualTheme} mode
               </div>
             </div>
