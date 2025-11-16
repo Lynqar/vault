@@ -177,12 +177,18 @@ const AddEntryModal: React.FC<AddEntryModalProps> = ({ entry, onClose }) => {
 
   // Handle QR code scan for TOTP setup
   const handleQRScanned = (qrData: string) => {
+<<<<<<< HEAD
     console.log('QR scanned:', qrData)
 
     // Try to parse as TOTP URL
     const parsed = parseTOTPUrl(qrData)
     if (parsed) {
       console.log('TOTP URL parsed:', parsed)
+=======
+    // Try to parse as TOTP URL
+    const parsed = parseTOTPUrl(qrData)
+    if (parsed) {
+>>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
       setFormData(prev => ({
         ...prev,
         totpSecret: parsed.secret,
@@ -194,7 +200,10 @@ const AddEntryModal: React.FC<AddEntryModalProps> = ({ entry, onClose }) => {
       setEnableTOTP(true) // Enable TOTP section
     } else {
       // If not a valid TOTP URL, don't fill anything
+<<<<<<< HEAD
       console.warn('Invalid TOTP URL scanned:', qrData)
+=======
+>>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
       setError('Invalid QR code. Please scan a valid TOTP QR code.')
     }
 

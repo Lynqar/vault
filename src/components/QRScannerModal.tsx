@@ -149,7 +149,10 @@ const QRScannerModal: React.FC<QRScannerModalProps> = ({
       if (frameCount % (90 + Math.random() * 60) < 1) { // Roughly every 3-5 seconds at ~30fps
         // For demo purposes, provide a way to test TOTP URL
         // In real implementation, this would be actual QR detection
+<<<<<<< HEAD
         console.log('QR scanner active - point camera at TOTP QR code')
+=======
+>>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
         // Note: jsQR library needed for actual QR detection
       }
 

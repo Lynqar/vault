@@ -132,7 +132,10 @@ export async function importVaultBackup(
   mode: 'overwrite' | 'merge'
 ): Promise<{ totalEntries: number; imported: number }> {
   try {
+<<<<<<< HEAD
     console.log('Starting import...')
+=======
+>>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
 
     // Convert from base64
     const encryptedArray = Uint8Array.from(atob(backupData), c => c.charCodeAt(0))
@@ -208,9 +211,12 @@ export async function importVaultBackup(
       }
 
       // Optionally verify key fingerprint (can be used for cross-device validation)
+<<<<<<< HEAD
       console.log('Backup integrity verified successfully')
 
       console.log('Backup file valid, importing...')
+=======
+>>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
 
       // Validate backup structure
       if (!backup.entries || !Array.isArray(backup.entries)) {
