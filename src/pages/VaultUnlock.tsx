@@ -11,6 +11,7 @@ import {
 } from '../lib/webauthn'
 import type { WebAuthnCredential } from '../lib/webauthn'
 import { useInfoToast } from '../contexts/ToastContext'
+import VaultHeader from '../components/VaultHeader'
 
 const VaultUnlock: React.FC = () => {
   const { unlock } = useVault()
@@ -123,12 +124,18 @@ const VaultUnlock: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-surface border border-border rounded-lg shadow-xl p-8"
-      >
+    <div className="min-h-screen bg-bg">
+      {/* Header - only on desktop */}
+      {!window.innerWidth < 768 && (
+        <VaultHeader onLock={() => {}} onSettings={() => {}} />
+      )}
+
+      <div className="flex items-center justify-center p-4 pt-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-md bg-surface border border-border rounded-lg shadow-xl p-8"
+        >
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Shield className="w-8 h-8 text-accent" />
@@ -200,7 +207,8 @@ const VaultUnlock: React.FC = () => {
             {loading ? 'Unlocking...' : 'Unlock Vault'}
           </Button>
         </form>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   )
 }
