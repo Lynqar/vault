@@ -1,0 +1,19 @@
+{
+  "name": "Secure Password Vault",
+  "short_name": "Lynqar Vault",
+  "description": "A secure, offline-first password manager with advanced encryption",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1e1b4b",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["productivity", "utilities", "security"]
+}
