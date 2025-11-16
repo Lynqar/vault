@@ -132,8 +132,18 @@ export async function importVaultBackup(
   mode: 'overwrite' | 'merge'
 ): Promise<{ totalEntries: number; imported: number }> {
   try {
-<<<<<<< HEAD
-    console.log('Starting import...')
+>>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
+
+    // Convert from base64
+// Import vault backup
+export async function importVaultBackup(
+  backupData: string,
+  masterPassword: string,
+  mode: 'overwrite' | 'merge'
+): Promise<{ totalEntries: number; imported: number }> {
+  try {
+
+    // Convert from base64
 =======
 >>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
 

@@ -63,15 +63,9 @@ const MobileDock: React.FC<MobileDockProps> = ({
 
   const menuItems = [
     { icon: FileText, label: 'Settings', action: () => onTabChange('menu') },
-<<<<<<< HEAD
-    { icon: User, label: 'Profile', action: () => {/* TODO: Profile page */} },
-    { icon: RotateCcw, label: 'Sync', action: () => {/* TODO: Manual sync */} },
-    { icon: Database, label: 'Clear Cache', action: () => {/* TODO: Clear cache */} }
-=======
     { icon: User, label: 'Profile', action: () => showSuccess('Profile feature coming soon!', 3000) },
     { icon: RotateCcw, label: 'Sync', action: () => showSuccess('Vault synced successfully!', 3000) },
     { icon: Database, label: 'Clear Cache', action: () => showSuccess('Cache cleared!', 3000) }
->>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
   ]
 
   return (
