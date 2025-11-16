@@ -1,4 +1,4 @@
-# Lynqar Password Vault
+ # Lynqar Password Vault
 
 A Progressive Web App (PWA) password manager built with React, TypeScript, and Vite. Features include encrypted password storage, TOTP code generation, and secure backup/restore functionality.
 
