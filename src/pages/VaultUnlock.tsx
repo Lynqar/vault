@@ -126,7 +126,7 @@ const VaultUnlock: React.FC = () => {
   return (
     <div className="min-h-screen bg-bg">
       {/* Header - only on desktop */}
-      {!window.innerWidth < 768 && (
+      {window.innerWidth >= 768 && (
         <VaultHeader onLock={() => {}} onSettings={() => {}} />
       )}
 
