@@ -132,20 +132,6 @@ export async function importVaultBackup(
   mode: 'overwrite' | 'merge'
 ): Promise<{ totalEntries: number; imported: number }> {
   try {
->>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
-
-    // Convert from base64
-// Import vault backup
-export async function importVaultBackup(
-  backupData: string,
-  masterPassword: string,
-  mode: 'overwrite' | 'merge'
-): Promise<{ totalEntries: number; imported: number }> {
-  try {
-
-    // Convert from base64
-=======
->>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
 
     // Convert from base64
     const encryptedArray = Uint8Array.from(atob(backupData), c => c.charCodeAt(0))
@@ -219,14 +205,6 @@ export async function importVaultBackup(
       if (computedChecksumB64 !== backup.checksum) {
         throw new Error('Backup integrity check failed - file may be corrupted or tampered with')
       }
-
-      // Optionally verify key fingerprint (can be used for cross-device validation)
-<<<<<<< HEAD
-      console.log('Backup integrity verified successfully')
-
-      console.log('Backup file valid, importing...')
-=======
->>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
 
       // Validate backup structure
       if (!backup.entries || !Array.isArray(backup.entries)) {

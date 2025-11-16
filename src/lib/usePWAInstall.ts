@@ -85,15 +85,6 @@ export function usePWAInstall(): PWAInstallState {
       await deferredPrompt.prompt()
       const choice = await deferredPrompt.userChoice
 
-<<<<<<< HEAD
-      if (choice.outcome === 'accepted') {
-        console.log('User accepted the PWA install prompt')
-      } else {
-        console.log('User dismissed the PWA install prompt')
-      }
-
-=======
->>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
       setDeferredPrompt(null)
     } catch (error) {
       console.error('Error prompting PWA install:', error)
