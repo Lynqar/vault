@@ -130,7 +130,7 @@ const VaultUnlock: React.FC = () => {
         <VaultHeader onLock={() => {}} onSettings={() => {}} />
       )}
 
-      <div className="flex items-center justify-center p-4 pt-8">
+      <div className={`flex items-center justify-center p-4 ${window.innerWidth >= 768 ? 'pt-28' : 'pt-8'}`}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

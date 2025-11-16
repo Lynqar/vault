@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { db } from '../lib/db'
 import { saltToB64, genSalt, deriveKey } from '../lib/crypto'
 import { Button } from '../ui'
+import VaultHeader from '../components/VaultHeader'
 
 const VaultOnboarding = () => {
   const [password, setPassword] = useState('')
@@ -49,8 +50,13 @@ const VaultOnboarding = () => {
   }
 
   return (
-    <div className="min-h-screen p-4 bg-bg">
-      <div className="flex items-center justify-center min-h-screen">
+    <div className="min-h-screen bg-bg">
+      {/* Header */}
+      {window.innerWidth >= 768 && (
+        <VaultHeader onLock={() => {}} onSettings={() => {}} />
+      )}
+
+      <div className={`flex items-center justify-center p-4 ${window.innerWidth >= 768 ? 'pt-28' : 'pt-8'}`}>
         <div className="w-full max-w-md bg-surface border border-border rounded-lg p-6">
         <div className="text-center mb-6">
           <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
