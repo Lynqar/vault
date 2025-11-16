@@ -145,12 +145,15 @@ const QRScannerModal: React.FC<QRScannerModalProps> = ({
       canvas.height = video.videoHeight || 480
       context.drawImage(video, 0, 0, canvas.width, canvas.height)
 
+>>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
+        // Note: jsQR library needed for actual QR detection
+      }
       // Simulate periodic QR detection every 3-5 seconds (for demo)
       if (frameCount % (90 + Math.random() * 60) < 1) { // Roughly every 3-5 seconds at ~30fps
         // For demo purposes, provide a way to test TOTP URL
         // In real implementation, this would be actual QR detection
-<<<<<<< HEAD
-        console.log('QR scanner active - point camera at TOTP QR code')
+        // Note: jsQR library needed for actual QR detection
+      }
 =======
 >>>>>>> 2da5a03 (Remove debug console.logs and implement missing mobile dock features)
         // Note: jsQR library needed for actual QR detection
