@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
 
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' *; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta http-equiv="X-Frame-Options" content="DENY" />
     <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
@@ -12,8 +12,8 @@
     <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()" />
 
     <!-- PWA Meta -->
-    <link rel="icon" type="image/svg+xml" href="/vault/vite.svg" />
-    <link rel="apple-touch-icon" href="/vault/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="apple-touch-icon" href="/vite.svg" />
     <link rel="manifest" href="/manifest.webmanifest" />
 
     <!-- External Fonts & Icons -->
@@ -28,9 +28,9 @@
     <meta name="msapplication-TileColor" content="#0f172a" />
 
     <title>Secure Password Vault</title>
-    <script type="module" crossorigin src="/vault/assets/index-B2bk6WS3.js"></script>
-    <link rel="stylesheet" crossorigin href="/vault/assets/index-BBAkfO8G.css">
-  <link rel="manifest" href="/vault/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/vault/registerSW.js"></script></head>
+    <script type="module" crossorigin src="/assets/index-B2bk6WS3.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BBAkfO8G.css">
+  <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
   <body>
     <div id="root"></div>
   </body>
