@@ -164,4 +164,4 @@ Matches Vite PWA manifest configuration for PWA installation prompts.
 npm run dev      # Start development server
 npm run build    # Build for production
 npm run lint     # Run ESLint
-npm run preview  # Preview production build a
+npm run preview  # Preview production build
