@@ -51,10 +51,8 @@ const VaultOnboarding = () => {
 
   return (
     <div className="min-h-screen bg-bg">
-      {/* Header */}
-      {window.innerWidth >= 768 && (
-        <VaultHeader onLock={() => {}} onSettings={() => {}} />
-      )}
+      {/* Header - responsive with mobile menu */}
+      <VaultHeader onLock={() => {}} onSettings={() => {}} />
 
       <div className={`flex items-center justify-center p-4 ${window.innerWidth >= 768 ? 'pt-28' : 'pt-8'}`}>
         <div className="w-full max-w-md bg-surface border border-border rounded-lg p-6">

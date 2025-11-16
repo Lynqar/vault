@@ -171,10 +171,8 @@ const Vault: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-bg">
-      {/* Conditional header - only show on desktop */}
-      {!isMobile && (
-        <VaultHeader onLock={lock} onSettings={() => setShowSettings(true)} />
-      )}
+      {/* Header - responsive with mobile menu */}
+      <VaultHeader onLock={lock} onSettings={() => setShowSettings(true)} />
 
       <main className={`container px-6 ${!isMobile ? 'pt-28 pb-8' : 'pt-6 pb-24'}`}>
         <div className="mb-6">
