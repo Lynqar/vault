@@ -5,7 +5,7 @@ A Progressive Web App (PWA) password manager built with React, TypeScript, and V
 ## 🚀 Development
 
 ```bash
-cd vault-main
+cd vault
 npm install
 npm run dev
 ```
